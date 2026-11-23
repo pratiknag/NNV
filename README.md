@@ -48,27 +48,6 @@ global linear solve. Non-Gaussian data are handled by a Laplace approximation.
 
 ## Highlights
 
-### No block-boundary artifacts
-
-<p align="center">
-  <img src="assets/spatial-maps-logistic.png" width="80%"
-       alt="Posterior means of the exact Laplace approximation, HV and NNV for logistic data, and their differences from the exact posterior mean">
-  <br>
-  <sub><b>Manuscript Figure 1.</b> Logistic data at n = 1,600 locations: posterior means of the
-  exact Laplace approximation, hierarchical Vecchia (HV) and NNV (top) and their differences from
-  the exact posterior mean (bottom). HV shows the boundaries of its partition; NNV does not.</sub>
-</p>
-
-### Two sparsity patterns from one maximin ordering
-
-<p align="center">
-  <img src="assets/patterns.png" width="90%"
-       alt="Column i of the precision-factor pattern, row i of the covariance-factor pattern, and both patterns for all locations">
-  <br>
-  <sub><b>Manuscript Figure 2.</b> The precision-factor pattern of Stage 1 and the
-  covariance-factor pattern of Stage 3 for n = 256 irregular locations, with ρ = 2.</sub>
-</p>
-
 ### Close to the exact posterior at every sparsity level
 
 <p align="center">
@@ -97,25 +76,6 @@ global linear solve. Non-Gaussian data are handled by a Laplace approximation.
   <sub><b>Manuscript Figure 6.</b> All methods at about 80 nonzeros per row, n up to 90,000: log
   score of HV and low-rank minus that of NNV (top) and time per data set (bottom), including
   HV and low-rank in GPvecchia.</sub>
-</p>
-
-### Essentially the exact Kalman filter on 61,009 grid cells
-
-<p align="center">
-  <img src="assets/application-exact.png" width="90%"
-       alt="Held-out RRMSPE and dLS relative to the exact Kalman filter, and time per filtering step">
-  <br>
-  <sub><b>Manuscript Figure 7.</b> MIRS total precipitable water, 11 days: held-out RRMSPE and dLS
-  of NNV, HV and low-rank relative to the exact Kalman filter, and time per filtering step.</sub>
-</p>
-
-<p align="center">
-  <img src="assets/application-maps.png" width="100%"
-       alt="Observations, filtering means and prediction-interval widths of NNV and HV at three time points">
-  <br>
-  <sub><b>Manuscript Figure 8.</b> Observations, filtering means and widths of the 95% prediction
-  intervals of NNV and HV at t = 1, 6 and 11; the insets zoom in where the HV widths jump at its
-  partition lines.</sub>
 </p>
 
 ---
