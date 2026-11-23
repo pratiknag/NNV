@@ -1,0 +1,12 @@
+# Python environment (env/). Tested with Python 3.11.5 on Linux (CPU only; 32 threads, 125 GB RAM).
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.5
+matplotlib==3.11.1
+seaborn==0.13.2
+numba==0.68.1
+# PyTorch (CPU build is enough), used by the sparse helper functions of the
+# basis-function figure and the boundary maps
+torch==2.14.0
+# maximin ordering and nearest-neighbor sets (katzfuss-group/veccs)
+veccs @ git+https://github.com/katzfuss-group/veccs.git@527c9956b6786907a77214b3ea04267c4935392f
