@@ -17,7 +17,7 @@ from plot_results import COLORS, FIGURE_DIR, LABELS, STYLES
 
 METHODS = ["sparse", "HV", "LR"]
 
-# Uncertainty maps as in the FNO-DST paper (Nag et al., Technometrics):
+# Colormap of the uncertainty maps:
 # colorRampPalette(c("brown", "blue", "green")) in R
 INTERVAL_CMAP = LinearSegmentedColormap.from_list(
     "brown_blue_green", ["#A52A2A", "#0000FF", "#00FF00"])

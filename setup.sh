@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Created by Pratik Nag, November 2026
 # Installs everything needed by run_simulations.sh and run_application.sh. Run from the
 # repository root:
 #

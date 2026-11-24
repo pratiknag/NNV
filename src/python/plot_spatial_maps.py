@@ -66,10 +66,10 @@ def nn_triple_mean(data, model, rho, range_param=0.15, variance=1.0,
     return mean
 
 
-def plot_model(fields, side, size, hv_m, nn_k, filename):
+def plot_model(fields, side, size, hv_m, nn_k, filename, model):
     """
     Row 1: exact posterior mean, HV and NN-triple posterior means. Row 2:
-    differences of HV and NN-triple from the exact posterior mean, below the
+    observations (bottom left) and differences of HV and NN-triple from the exact posterior mean, below the
     corresponding maps. Tick labels only on the outer edges of the panels.
     """
     def img(v):
@@ -96,7 +96,29 @@ def plot_model(fields, side, size, hv_m, nn_k, filename):
                             cmap="RdBu_r", vmin=-dlim, vmax=dlim,
                             interpolation="nearest")
         ax.set_title(title, fontsize=17)
-    axes[1, 0].set_axis_off()
+    # Bottom left: the observations z (binary or counts)
+    z = np.asarray(fields["z"])
+    ax = axes[1, 0]
+    if model == "logistic":
+        cmap = matplotlib.colors.ListedColormap(["#d9d9d9", "#252525"])
+        im_z = ax.imshow(img(z), origin="lower", extent=extent, cmap=cmap,
+                         vmin=-0.5, vmax=1.5, interpolation="nearest")
+        ticks = [0, 1]
+    else:
+        zmax = int(z.max())
+        cmap = plt.get_cmap("viridis", zmax + 1)
+        im_z = ax.imshow(img(z), origin="lower", extent=extent, cmap=cmap,
+                         vmin=-0.5, vmax=zmax + 0.5, interpolation="nearest")
+        ticks = np.arange(0, zmax + 1, 5 if zmax > 10 else 1)
+    ax.set_title("data", fontsize=17)
+    # colorbar in an inset to the left of the panel (outside its y label),
+    # so that the panels of the two rows stay aligned
+    cax = ax.inset_axes([-0.42, 0.075, 0.06, 0.85])
+    cb = fig.colorbar(im_z, cax=cax, ticks=ticks)
+    cax.yaxis.set_ticks_position("left")
+    cax.yaxis.set_label_position("left")
+    cb.set_label("observation", fontsize=17)
+    cb.ax.tick_params(labelsize=14)
     # Coarse partition lines of HV (J = 2: first splits at 1/2, then 1/4, 3/4)
     for ax in (axes[0, 1], axes[1, 1]):
         for v in (0.25, 0.5, 0.75):
@@ -107,10 +129,10 @@ def plot_model(fields, side, size, hv_m, nn_k, filename):
         ax.set_yticks([0, 0.5, 1])
         ax.tick_params(labelsize=14, labelleft=False, labelbottom=False)
     # Outer edges: left of each row, bottom of each column
-    for ax in (axes[0, 0], axes[1, 1]):
+    for ax in (axes[0, 0], axes[1, 0]):
         ax.tick_params(labelleft=True)
         ax.set_ylabel("$s_2$", fontsize=20)
-    for ax in (axes[0, 0], axes[1, 1], axes[1, 2]):
+    for ax in axes[1]:
         ax.tick_params(labelbottom=True)
         ax.set_xlabel("$s_1$", fontsize=20)
     cb = fig.colorbar(im_top, ax=axes[0], shrink=0.85)
@@ -139,21 +161,22 @@ def main():
                    .query("requested == @size")["hv_m"].iloc[0])
         (rho, nn_k), = calibrate_rho_values(fields[["x1", "x2"]].to_numpy(),
                                             [size])
-        # label NNV by its maximum conditioning-set size m = max_i |K_i| - 1
-        # (s_i not counted), as for HV; nn_k is the floored average size
+        # label NNV by its median conditioning-set size m = median_i |K_i| - 1
+        # (s_i not counted), as for HV (Section 3.1)
         sp = np.unique(maxmin_cpp_ancestor(fields[["x1", "x2"]].to_numpy(),
                                            np.empty((0, 2)), rho).sparsity,
                        axis=1)
         counts = np.bincount(sp[1, sp[0] != sp[1]], minlength=len(fields))
-        nn_avg, nn_k = counts.mean(), int(counts.max())
+        nn_avg, nn_max = counts.mean(), int(counts.max())
+        nn_k = int(np.median(counts))
         fields["nn"] = nn_triple_mean(fields, model, rho)
         rmse = {k: np.sqrt(np.mean((fields[c] - fields["exact"]) ** 2))
                 for k, c in [("HV", f"hv_{size}"), ("NN-triple", "nn")]}
-        print(f"{model}: HV m = {hv_m}, NN-triple rho = {rho:.3f} (m = {nn_k}, average {nn_avg:.1f}); "
+        print(f"{model}: HV m = {hv_m}, NN-triple rho = {rho:.3f} (median m = {nn_k}, mean {nn_avg:.1f}, max {nn_max}); "
               f"RMS difference from exact: HV {rmse['HV']:.4f}, "
               f"NN-triple {rmse['NN-triple']:.4f}")
         out = args.figure_dir / f"spatial-maps-{model}.pdf"
-        plot_model(fields, side, size, hv_m, nn_k, out)
+        plot_model(fields, side, size, hv_m, nn_k, out, model)
         print(f"saved {out}")
 
 

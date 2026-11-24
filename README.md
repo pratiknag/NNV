@@ -85,8 +85,6 @@ global linear solve. Non-Gaussian data are handled by a Laplace approximation.
 Run every command from the root of this repository.
 
 ```bash
-git clone https://github.com/pratiknag/NNV.git
-cd NNV
 bash setup.sh
 ```
 

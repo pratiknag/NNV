@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Created by Pratik Nag, November 2026
 # Application to the MIRS total precipitable water (TPW) data: Section 4 of the manuscript
 # (Table 1, Figures 7-8) and Section S7 of the supplement (Figures S7-S8). Runs NNV, HV,
 # low-rank (LR) and the exact Kalman filter on the 247 x 247 grid and writes the table and

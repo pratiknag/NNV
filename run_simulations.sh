@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Created by Pratik Nag, November 2026
 # Methodology figures and simulation study: Figures 2-6 of the manuscript and Figures S1-S6 of
 # the supplement. Generates the data, runs NNV, HV, low-rank (LR) and the exact posterior or
 # Kalman filter, and writes every figure. Run from the repository root:
